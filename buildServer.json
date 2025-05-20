@@ -14,6 +14,6 @@
 	],
 	"workspace": "/Users/grahamhindle/workshop/App/TuistApp.xcworkspace",
 	"build_root": "/Users/grahamhindle/Library/Developer/Xcode/DerivedData/TuistApp-bxhdvsfcqtutepcebizlajyglnau",
-	"scheme": "TuistAppKit",
+	"scheme": "TuistApp-Workspace",
 	"kind": "xcode"
 }

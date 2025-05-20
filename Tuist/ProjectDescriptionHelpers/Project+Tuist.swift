@@ -105,9 +105,9 @@ public extension Project {
                         ]
                     ),
                     sources: [
-                        "./Sources/*.swift"
+                        "./Sources/**"
                     ],
-                    // resources: module.resources,
+                    resources: module.resources,
                     dependencies: dependencies,
                     settings: module.settings)
         ]
@@ -124,16 +124,13 @@ public extension Project {
                     // deploymentTarget: .iOS("18.0"),
                     infoPlist: .extendingDefault(
                         with: [
-                            "UILaunchScreen": [
-                                "UIColorName": "",
-                                "UIImageName": ""
-                            ]
+                            "UILaunchScreen": "LaunchScreen.storyboard"
                         ]
                     ),
                     sources: [
-                        "./Tests/*.swift"
+                        "./Tests/**"
                     ],
-                    // resources: module.resources,
+                    resources: module.resources,
                     dependencies: dependencies + [.target(name: module.name)],
                     settings: module.settings
                 )
