@@ -1,0 +1,11 @@
+included:
+  - Sources/**/*.swift
+  - Tests/**/*.swift
+
+excluded:
+  - Sources/App/Info.plist
+  - Sources/App/AppDelegate.swift
+  - Sources/App/SceneDelegate.swift
+  - Sources/App/Main.swift
+  - Sources/App/App.swift
+  - Sources/App/AppDelegate.swift

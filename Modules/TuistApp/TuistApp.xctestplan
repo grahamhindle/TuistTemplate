@@ -1,0 +1,30 @@
+{
+  "configurations" : [
+    {
+      "id" : "B8EED541-248F-4D58-8D1E-EA99F54B1A82",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : false,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:TuistApp.xcodeproj",
+      "identifier" : "02A902711AD4F4BF105EF48D",
+      "name" : "TuistApp"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:TuistApp.xcodeproj",
+        "identifier" : "B67E6C1D8DF7CF9F5186ABCA",
+        "name" : "TuistAppTests"
+      }
+    }
+  ],
+  "version" : 1
+}
