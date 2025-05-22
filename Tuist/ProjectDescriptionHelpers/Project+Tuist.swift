@@ -1,5 +1,8 @@
 import ProjectDescription
 
+//let name = Module.name
+//print(name)
+
 public enum Dependency {
     case module(Module)
     case package(String)
@@ -12,24 +15,23 @@ public enum Dependency {
     }
 }
 
-public enum Module: String {
-    case app
-    case kit
-
+public enum Module {
+    case app(String?, [TargetDependency] = [])
+    case kit(String?, [TargetDependency] = [])
+    
     var product: Product {
         switch self {
-        case .app:
-            return .app
-        case .kit:
-            return .framework
+        case .app: return .app
+        case .kit: return .framework
         }
     }
 
     var name: String {
         switch self {
-        case .app: Constants.appName
-        case .kit: Constants.appName + "Kit"
-        default: Constants.appName + rawValue
+        case .app(let customName, _):
+            return customName ?? "TuistApp"
+        case .kit(let customName, _):
+            return customName.map { "\($0)" } ?? "TuistAppFramework"
         }
     }
 
@@ -44,9 +46,16 @@ public enum Module: String {
         }
     }
 
+    var targetDependencies: [TargetDependency] {
+        switch self {
+        case .app(_, let deps), .kit(_, let deps):
+            return deps
+        }
+    }
+
     var settings: Settings {
         switch self {
-        case .app:
+        case .app, .kit:
             return .settings(
                 debug: [
                     "SWIFT_COMPILATION_MODE": "singlefile",
@@ -54,7 +63,7 @@ public enum Module: String {
                     "OTHER_SWIFT_FLAGS": ["-Xfrontend", "-serialize-debugging-options"],
                     "OTHER_LDFLAGS": [
                         "$(inherited)",
-
+                        "-ObjC",
                         "-Xlinker",
                         "-interposable"
                     ],
@@ -63,13 +72,7 @@ public enum Module: String {
                     "ENABLE_MODULE_VERIFIER": "true"
                 ]
             )
-        case .kit:
-            return .settings(
-                base: [
-                    "ENABLE_USER_SCRIPT_SANDBOXING": "true",
-                    "ENABLE_MODULE_VERIFIER": "true"
-                ]
-            )
+        
         }
     }
 
@@ -90,7 +93,7 @@ public enum Module: String {
 
 public extension Project {
     static func tuist(module: Module) -> Project {
-        let dependencies = module.dependencies.map(\.targetDependency)
+        let dependencies = module.dependencies.map(\.targetDependency) + module.targetDependencies
         var targets: [Target] = [
             .target(name: module.name,
                     destinations: .iOS,
@@ -98,14 +101,13 @@ public extension Project {
                     bundleId: "com.grahamhindle.\(module.name)",
                     infoPlist: .extendingDefault(
                         with: [
-                            "UILaunchScreen": [
-                                "UIColorName": "",
-                                "UIImageName": ""
-                            ]
+                            "UILaunchScreen": ["UIImageName": "LaunchImage",
+                           "UIColorName": "LaunchBackground"],
                         ]
                     ),
                     sources: [
-                        "./Sources/**"
+                        "./Sources/**",
+                        "./Sources/**/**"
                     ],
                     resources: module.resources,
                     dependencies: dependencies,
@@ -116,19 +118,20 @@ public extension Project {
             targets.append(
                 .target(
                     name: "\(module.name)Tests",
-                    // environment: module.environment,
                     destinations: .iOS,
-
                     product: .unitTests,
                     bundleId: "com.grahamhindle.\(module.name)Tests",
-                    // deploymentTarget: .iOS("18.0"),
                     infoPlist: .extendingDefault(
                         with: [
-                            "UILaunchScreen": "LaunchScreen.storyboard"
+                            "UILaunchScreen": ["Image Name": "LaunchImage",
+                           "BackgroundColor": "LaunchBackground",
+                           ]
                         ]
+                        
                     ),
                     sources: [
-                        "./Tests/**"
+                        "./Tests/**",
+                        "./Tests/**/**"
                     ],
                     resources: module.resources,
                     dependencies: dependencies + [.target(name: module.name)],

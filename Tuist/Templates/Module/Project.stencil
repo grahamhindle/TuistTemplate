@@ -1,0 +1,12 @@
+//
+//  {{ name }}View.swift
+//  {{ name }}
+//
+//  Created by {{ author }} on {{ date }}.
+//  Copyright © {{ year }} {{ company }}. All rights reserved.
+//
+
+import ProjectDescription
+import ProjectDescriptionHelpers
+
+let project = Project.tuist(module: .kit("{{name}}"))
